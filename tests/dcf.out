@@ -1,0 +1,74 @@
+1    1160.5 HB    N:21  PREOPERATIONAL
+2    1209.9 HB    N:22  PREOPERATIONAL
+3    3160.4 HB    N:21  PREOPERATIONAL
+4    3209.9 HB    N:22  PREOPERATIONAL
+5    5160.5 HB    N:21  PREOPERATIONAL
+6    5209.9 HB    N:22  PREOPERATIONAL
+7    7160.7 HB    N:21  PREOPERATIONAL
+8    7210.1 HB    N:22  PREOPERATIONAL
+9    9160.7 HB    N:21  PREOPERATIONAL
+10    9210.1 HB    N:22  PREOPERATIONAL
+11   11215.9 HB    N:81 BOOT UP
+12   11160.5 HB    N:21  PREOPERATIONAL
+13   12534.0 DCL indication
+14   12534.4 USDO  N:81      UlReq 0x1000.0.Device Type 
+15   11190.3 USDO  N:21      UlRsp 0x1000.0.Device Type 1, <0x1>
+16   11210.0 HB    N:22  PREOPERATIONAL
+17   12575.2 USDO  N:81      UlReq 0x1001.0.Error Register 
+18   12575.6 DCL indication
+19   11240.3 USDO  N:21      UlRsp 0x1001.0.Error Register 129, <0x81>
+20   12624.0 USDO  N:81      UlReq 0x1000.0.Device Type 
+21   11279.7 USDO  N:22      UlRsp 0x1000.0.Device Type 1, <0x1>
+22   12662.0 USDO  N:81      UlReq 0x1018.1.Vendor ID 
+23   11320.3 USDO  N:21      UlRsp 0x1018.1.Vendor ID 420, <0x1a4>
+24   12701.8 USDO  N:81      UlReq 0x1001.0.Error Register 
+25   11359.7 USDO  N:22      UlRsp 0x1001.0.Error Register 129, <0x81>
+26   12742.9 USDO  N:81      UlReq 0x1018.2.Product Code 
+27   11400.3 USDO  N:21      UlRsp 0x1018.2.Product Code 11, <0xb>
+28   12774.2 USDO  N:81      UlReq 0x1018.1.Vendor ID 
+29   11439.7 USDO  N:22      UlRsp 0x1018.1.Vendor ID 420, <0x1a4>
+30   12821.3 USDO  N:81      UlReq 0x1018.3.Revision Number 
+31   11480.3 USDO  N:21      UlRsp 0x1018.3.Revision Number 16843008, <0x1010100>
+32   12861.2 USDO  N:81      UlReq 0x1018.2.Product Code 
+33   11519.7 USDO  N:22      UlRsp 0x1018.2.Product Code 11, <0xb>
+34   12893.7 USDO  N:81      UlReq 0x1018.4.Serial Number 
+35   11550.3 USDO  N:21      UlRsp 0x1018.4.Serial Number 59, <0x3b>
+36   12930.3 USDO  N:81      UlReq 0x1018.3.Revision Number 
+37   11589.7 USDO  N:22      UlRsp 0x1018.3.Revision Number 16843008, <0x1010100>
+38   12969.9 USDO  N:81      UlReq 0x1008.0.Manufacturer Device Name 
+39   11630.5 USDO  N:21      UlRsp 0x1008.0.Manufacturer Device Name RMP830лл
+40   13002.2 USDO  N:81      UlReq 0x1018.4.Serial Number 
+41   11659.7 USDO  N:22      UlRsp 0x1018.4.Serial Number 44, <0x2c>
+42   13039.3 USDO  N:81      UlReq 0x1009.0.Manufacturer Hardware Version 
+43   11700.5 USDO  N:21      UlRsp 0x1009.0.Manufacturer Hardware Version 1.0.0ллл
+44   13087.2 USDO  N:81      UlReq 0x1008.0.Manufacturer Device Name 
+45   11749.9 USDO  N:22      UlRsp 0x1008.0.Manufacturer Device Name RMP830лл
+46   13127.5 USDO  N:81      UlReq 0x2100.0. 
+47   11789.9 USDO  N:21 USDO abort 0x2100.0. Data object does not exist in the object dictionary
+48   13176.4 USDO  N:81      UlReq 0x1009.0.Manufacturer Hardware Version 
+49   11839.9 USDO  N:22      UlRsp 0x1009.0.Manufacturer Hardware Version 1.0.0ллл
+50   13229.7 USDO  N:81      UlReq 0x100a.0.Manufacturer Software Version 
+51   11891.1 USDO  N:21      UlRsp 0x100a.0.Manufacturer Software Version RMP830 1.1.0.24л
+52   13279.9 USDO  N:81      UlReq 0x2100.0. 
+53   11939.3 USDO  N:22 USDO abort 0x2100.0. Data object does not exist in the object dictionary
+54   13321.2 USDO  N:81      UlReq 0x1f63.6. 
+55   11980.2 USDO  N:21      UlRsp 0x1f63.6. 0, <0x0>
+56   13361.7 USDO  N:81      UlReq 0x100a.0.Manufacturer Software Version 
+57   12020.5 USDO  N:22      UlRsp 0x100a.0.Manufacturer Software Version RMP830 1.1.0.24л
+58   13402.1 USDO  N:81      UlReq 0x1f63.8. 
+59   12060.2 USDO  N:21      UlRsp 0x1f63.8. 0, <0x0>
+60   13443.0 USDO  N:81      UlReq 0x1f63.6. 
+61   12099.7 USDO  N:22      UlRsp 0x1f63.6. 0, <0x0>
+62   13482.2 USDO  N:81      UlReq 0x1020.1.Subindex 1 
+63   12140.3 USDO  N:21      UlRsp 0x1020.1.Subindex 1 0, <0x0>
+64   13513.9 USDO  N:81      UlReq 0x1f63.8. 
+65   12169.7 USDO  N:22      UlRsp 0x1f63.8. 0, <0x0>
+66   13546.7 USDO  N:81   DlExpReq 0x1017.0.Producer Heartbeat Time 2000, <0x7d0>
+67   12209.8 USDO  N:21  DlExpResp 0x1017.0.Producer Heartbeat Time 
+68   13594.8 USDO  N:81      UlReq 0x1020.1.Subindex 1 
+69   12259.7 USDO  N:22      UlRsp 0x1020.1.Subindex 1 0, <0x0>
+70   13645.1 USDO  N:81      UlReq 0x1234.1. 
+71   12309.9 USDO  N:21 USDO abort 0x1234.1. Data object does not exist in the object dictionary
+72   13210.0 HB    N:22  PREOPERATIONAL
+73   14210.7 HB    N:21  PREOPERATIONAL
+74   15210.1 HB    N:22  PREOPERATIONAL
