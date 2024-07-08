@@ -16,9 +16,5 @@ def parse_canopen_heartbeat_message(msg: can.Message):
         s += " ?? NMT STATE"
     return s
 
-
-
-
-
-#msg = can.Message(timestamp=1453.159, arbitration_id=0x716, is_extended_id=False, dlc=1, data=[0x5], is_fd=True,
+# msg = can.Message(timestamp=1453.159, arbitration_id=0x716, is_extended_id=False, dlc=1, data=[0x5], is_fd=True,
 #                  bitrate_switch=False, error_state_indicator=False)

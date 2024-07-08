@@ -1,6 +1,6 @@
 import pytest
 
-from main import parse_trc_string, generate_explanation, trc_line_to_out_line
+from convert_trc_file import trc_line_to_out_line
 from utils import assert_lines_are_similar
 
 zipped_lines_from_dcf_out_dcf_trc = [('1      1160.457 FD     0715 Rx 1  7F', '1    1160.5 HB    N:21  PREOPERATIONAL'),
@@ -158,11 +158,13 @@ def read_and_zip(trc_path):
             zipped_list = list(zip([x.strip() for x in trc_lines], [x.strip() for x in out_lines]))
             return zipped_list
 
+
 @pytest.mark.parametrize(
     "line_from_trc_file,line_from_out_file", read_and_zip('dcf.trc'),
 )
 def test_dcf(line_from_trc_file, line_from_out_file):
     assert_lines_are_similar(trc_line_to_out_line(line_from_trc_file), line_from_out_file)
+
 
 """
 @pytest.mark.parametrize(

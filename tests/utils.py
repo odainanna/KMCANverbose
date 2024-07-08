@@ -1,6 +1,3 @@
-from main import parse_trc_string, generate_explanation
-
-
 def assert_lines_are_similar(s1, s2):
     # compare results
     expected_list = s1.split()

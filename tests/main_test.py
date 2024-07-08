@@ -1,10 +1,10 @@
-import can
-from main import generate_explanation, parse_trc_string, trc_line_to_out_line
+from convert_trc_file import parse_trc_string, trc_line_to_out_line
 from utils import assert_lines_are_similar
 
 
 def check_single_line(line_from_trc_file, line_from_out_file):
     assert_lines_are_similar(trc_line_to_out_line(line_from_trc_file), line_from_out_file)
+
 
 def test_nmt_0000():
     line_from_trc_file = "      15     12956.035 FD     0000 Rx 2  81 16 "
@@ -88,6 +88,3 @@ def test_0595():
     line_from_trc_file = "     43     11700.482 FD     0595 Rx 16 51 31 0E 00 09 10 09 05 31 2E 30 2E 30 CC CC CC "
     line_from_out_file = "43   11700.5 USDO  N:21      UlRsp 0x1009.0.Manufacturer Hardware Version 1.0.0ÌÌÌ"
     check_single_line(line_from_trc_file, line_from_out_file)
-
-
-

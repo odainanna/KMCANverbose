@@ -1,14 +1,9 @@
-import glob
 import sys
 from pathlib import Path
 
 import can
 
-from decode_emcy import parse_canopen_emcy_message
-from decode_lss import CANopenLSSCommands
-from decode_nmt import parse_canopen_nmt_message
-from decode_usdo import parse_canopen_usdo_client_message, parse_canopen_usdo_server_message, SDOInfo
-from hb import parse_canopen_heartbeat_message
+from explain_msg import explain_msg
 
 
 def parse_trc_string(line):
@@ -41,61 +36,9 @@ def parse_trc_string(line):
         raise ValueError(f'Failed to parse {line}')
 
 
-def generate_explanation(line_nr, msg):
-    def undefined_message_id():
-        return "?msg_id: " + str(msg)
-
-    def msg_to_string(msg: can.Message):
-        return ""  # str(msg)
-
-    output = f"{line_nr} {msg.timestamp:.1f} "
-    msg_id = msg.arbitration_id
-    try:
-        if msg_id == 0:
-            output += "NMT : " + parse_canopen_nmt_message(msg)
-        elif msg_id == 0x7A:
-            output += "DCL indication"
-        elif msg_id == 0x7B:
-            output += "RCL indication"
-        elif msg_id < 0x80:
-            output += "?msg_id  : " + msg_to_string(msg)
-        elif msg_id == 0x80:
-            output += "SYNC:"
-        elif msg_id < 0x100:
-            output += parse_canopen_emcy_message(msg)
-        elif msg_id == 0x100:
-            output += "TIME " + hex(msg_id) + msg_to_string(msg)
-        elif msg_id <= 0x580:
-            output += "PDO : " + msg_to_string(msg)
-        elif msg_id < 0x600:
-            object = parse_canopen_usdo_server_message(msg)
-            output += (f"USDO {object.messageType} N:{object.nodeId} {str(object.operation).rjust(10)} "
-                       f"{hex(object.index)}.{object.subindex}.{object.description} {object.value}")
-        elif msg_id == 0x600:
-            output += undefined_message_id()
-        elif msg_id < 0x680:
-            object = parse_canopen_usdo_client_message(msg)
-            output += (f"USDO {object.messageType} N:{object.nodeId} {str(object.operation).rjust(10)} "
-                       f"{hex(object.index)}.{object.subindex}.{object.description} {object.value}")
-        elif msg_id == 0x700:
-            output += undefined_message_id()
-        elif msg_id < 0x780:
-            output += "HB    N:" + parse_canopen_heartbeat_message(msg)
-        elif msg_id == 0x7E5:
-            if msg.data[0] in CANopenLSSCommands:
-                output += f"LSS {CANopenLSSCommands[msg.data[0]]}"
-            else:
-                output += "LSS " + msg_to_string(msg)
-        else:
-            output += "QQ" + msg_to_string(msg)  # Add "QQ" and the line to the output string
-        return output + '\n'
-    except KeyError:
-        return output + '\n'
-
-
 def trc_line_to_out_line(line_from_trc_file):
     line_nr, msg = parse_trc_string(line_from_trc_file)
-    line_for_output_file = generate_explanation(line_nr, msg)
+    line_for_output_file = f"{line_nr} {msg.timestamp:.1f} {explain_msg(msg)}".strip() + "\n"
     return line_for_output_file
 
 

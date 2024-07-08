@@ -1,4 +1,5 @@
 import can
+
 ERROR_CODES = {
     0x0000: "Error reset or no error",
     0x1000: "Generic error",
@@ -130,9 +131,8 @@ ERROR_CODES = {
 def parse_canopen_emcy_message(msg: can.Message):
     valueStart = 0
     errorCode = (msg.data[valueStart] + (msg.data[valueStart + 1] << 8) + (
-                msg.data[valueStart + 2] << 16) + (msg.data[valueStart + 3] << 24))
+            msg.data[valueStart + 2] << 16) + (msg.data[valueStart + 3] << 24))
     if errorCode in ERROR_CODES:
         return f"EMCY N:{msg.arbitration_id & 0x7F} {errorCode:x} {ERROR_CODES[errorCode]}"
     else:
         return f"EMCY {msg}"
-

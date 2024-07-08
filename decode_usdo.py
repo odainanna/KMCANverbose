@@ -1,7 +1,7 @@
-import can
+from dataclasses import dataclass
 from enum import IntEnum
 
-from dataclasses import dataclass
+import can
 
 
 def convertLongToAsciiHex(num):
@@ -285,11 +285,13 @@ def insertCANopenObjects(CANopen_dict):
 
 insertCANopenObjects(CANopen_dict)
 
+
 def CANopen_dict_lookup(sdo):
     try:
         return CANopen_dict[sdo.index][sdo.subindex]
     except KeyError:
         return ""
+
 
 def parse_canopen_usdo_server_message(msg: can.Message):
     sdo = SDOInfo()
