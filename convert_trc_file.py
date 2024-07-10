@@ -42,7 +42,7 @@ def trc_line_to_out_line(line_from_trc_file):
     return line_for_output_file
 
 
-def convert_trc_file_to_out_file(path):
+def convert_trc_file(path):
     path = Path(path)
     if not path.exists():
         raise ValueError(f'{path} does not exist')
@@ -72,7 +72,7 @@ def main():
     if all([path.exists() and path.is_file() for path in paths]):
         trc_files = paths
         for trc_file in trc_files:
-            output_file = convert_trc_file_to_out_file(trc_file)
+            output_file = convert_trc_file(trc_file)
             print(f'Read from {trc_file} and wrote to {output_file}.')
     else:
         raise ValueError('Invalid args. Args should be a list of paths to .trc-files that exist')

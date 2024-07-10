@@ -2,7 +2,7 @@ import can
 
 
 def parse_canopen_heartbeat_message(msg: can.Message):
-    s = str(msg.arbitration_id & 0x7f)
+    s = str(int(msg.arbitration_id) & 0x7f)
     data = msg.data[0]
     if data == 0:
         s += " BOOT UP"
