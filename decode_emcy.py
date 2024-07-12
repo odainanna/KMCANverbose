@@ -135,4 +135,4 @@ def parse_canopen_emcy_message(msg: can.Message):
     if errorCode in ERROR_CODES:
         return f"EMCY N:{msg.arbitration_id & 0x7F} {errorCode:x} {ERROR_CODES[errorCode]}"
     else:
-        return f"EMCY {msg}"
+        return f"EMCY"

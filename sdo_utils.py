@@ -35,6 +35,7 @@ class DataType(IntEnum):
     OS_COMMAND = 0x25
     ACTIVE_ERROR_HISTORY = 0x26
 
+
 CANopen_dict = {
     0x1000: {0: "Device Type"},
     0x1001: {0: "Error Register"},
@@ -177,6 +178,7 @@ def CANopen_dict_lookup(sdo):
         return CANopen_dict[sdo.index][sdo.subindex]
     except KeyError:
         return ""
+
 
 @dataclass
 class SDOInfo:

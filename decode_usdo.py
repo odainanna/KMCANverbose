@@ -1,5 +1,3 @@
-
-
 import can
 
 from sdo_utils import CANopen_dict_lookup, DataType, SDOInfo
@@ -9,9 +7,6 @@ def convertLongToAsciiHex(num):
     # Convert long to ASCII string
     # Convert long to hexadecimal string
     return f"{str(num)}, <{hex(num)}>"
-
-
-
 
 
 def getCmdCodeTextUsdo(ccs):
@@ -104,7 +99,6 @@ USDO_ERROR_MESSAGES = {
 }
 
 
-
 def parse_canopen_usdo_server_message(msg: can.Message):
     sdo = SDOInfo()
     destination = msg.data[0]
@@ -113,17 +107,16 @@ def parse_canopen_usdo_server_message(msg: can.Message):
     is_read = (sdo.scs & 0x60) == 0x40
     is_write = (sdo.scs & 0x60) == 0x20
     sdo.nodeId = msg.arbitration_id & 0x7F
+    sdo.index = msg.data[4] + (msg.data[5] << 8)
+    sdo.subindex = msg.data[3]
 
     if sdo.scs == 0x21:
-        sdo.index = msg.data[4] + (msg.data[5] << 8)
-        sdo.subindex = msg.data[3]
+        # Download expedited response
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
-        sdo.messageType = ""
         sdo.description = CANopen_dict_lookup(sdo)
 
     elif sdo.scs == 0x7f:
-        sdo.index = msg.data[4] + (msg.data[5] << 8)
-        sdo.subindex = msg.data[3]
+        # USDO abort service
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
         sdo.data = ''.join([f'{i:02x}' for i in msg.data[6:]])
         sdo.value = valueFormat(DataType.UNSIGNED8, 6, msg.data)
@@ -131,29 +124,21 @@ def parse_canopen_usdo_server_message(msg: can.Message):
         sdo.value = USDO_ERROR_MESSAGES[msg.data[6]]
 
     elif sdo.scs == 0x31:
+        # Upload expedited response
         sid = msg.data[2]
         is_read = (sdo.scs & 0x60) == 0x40
         is_write = (sdo.scs & 0x60) == 0x20
-
         datatype = msg.data[6]
         valueStart = 6
-
-        sdo.index = msg.data[4] + (msg.data[5] << 8)
-        sdo.subindex = msg.data[3]
         sdo.dataLength = msg.dlc - 6
         sdo.data = ''.join([f'{i:02x}' for i in msg.data[6:]])
-
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
-        sdo.messageType = ""
         sdo.value = valueFormat(datatype, 8, msg.data)
         sdo.description = CANopen_dict_lookup(sdo)
-
     else:
         sdo.nodeId = msg.arbitration_id & 0x7F
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
-        sdo.messageType = ""
         sdo.value = ""
-
     return sdo
 
 
@@ -196,7 +181,6 @@ def parse_canopen_usdo_client_message(msg: can.Message):
 
     else:
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
-
     return sdo
 
 

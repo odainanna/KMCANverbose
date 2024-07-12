@@ -1,7 +1,7 @@
 def assert_lines_are_similar(s1, s2):
     # compare results
-    expected_list = s1.split()
-    results_list = s2.split()
+    expected_list = s1.strip().split()
+    results_list = s2.strip().split()
     assert len(results_list) == len(expected_list)
 
     # assert same line number

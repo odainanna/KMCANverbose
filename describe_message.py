@@ -1,5 +1,3 @@
-import can
-
 from decode_emcy import parse_canopen_emcy_message
 from decode_lss import CANopenLSSCommands
 from decode_nmt import parse_canopen_nmt_message
@@ -8,21 +6,15 @@ from decode_usdo import parse_canopen_usdo_server_message, parse_canopen_usdo_cl
 from hb import parse_canopen_heartbeat_message
 
 
-def explain_msg(msg):
+def describe_message(msg):
     def undefined_message_id():
-        return "?msg_id: " + str(msg)
-
-    def msg_to_string(msg: can.Message):
-        return ""  # str(msg)
-
-    def format_raw_data():
-        return f'{msg.arbitration_id:02x} <{' '.join(f"{x:02x}" for x in msg.data)}>'
+        return "?"
 
     def format_sdo(sdo):
-        return f'{format_raw_data()} {object.messageType} N:{object.nodeId} {str(object.operation).rjust(10)} {hex(object.index)}.{object.subindex}.{object.description} {object.value} {object.hexValue}'
-
-    def f(cob_type):
-        return f'{cob_type} {msg.arbitration_id:02x} <{' '.join(f"{x:02x}" for x in msg.data)}>'
+        s = f'{sdo.messageType} N:{sdo.nodeId} {str(sdo.operation)}'
+        if sdo.operation != '?':
+            s += f' {hex(sdo.index)}.{sdo.subindex} {sdo.description} {sdo.value} {sdo.hexValue}'
+        return s
 
     msg_id = msg.arbitration_id
     try:
@@ -35,33 +27,29 @@ def explain_msg(msg):
         elif msg_id == 0x7B:
             return "RCL indication"
         elif msg_id < 0x80:
-            return "?msg_id  : " + msg_to_string(msg)
+            return undefined_message_id()
         elif msg_id == 0x80:
             return "SYNC:"
         elif msg_id < 0x100:
             return parse_canopen_emcy_message(msg)
         elif msg_id == 0x100:
-            return "TIME " + hex(msg_id) + msg_to_string(msg)
+            return "TIME " + hex(msg_id)
         elif msg_id <= 0x580:
-            return "PDO : " + msg_to_string(msg)
+            return "PDO : "
         elif msg_id < 0x600:
             if msg.is_fd:
-                object = parse_canopen_usdo_server_message(msg)
-                return f"USDO {format_sdo(object)}"
+                return f"USDO {format_sdo(parse_canopen_usdo_server_message(msg))}"
             else:
-                object = parse_canopen_sdo_server_message(msg)
-                return f"SDO {format_sdo(object)}"
+                return f"SDO {format_sdo(parse_canopen_sdo_server_message(msg))}"
         elif msg_id == 0x600:
             return undefined_message_id()
         elif msg_id < 0x680:
             if msg.is_fd:
-                object = parse_canopen_usdo_client_message(msg)
-                return f"USDO {format_sdo(object)}"
+                return f"USDO {format_sdo(parse_canopen_usdo_client_message(msg))}"
             else:
-                object = parse_canopen_sdo_client_message(msg)
-                return f"SDO {format_sdo(object)}"
+                return f"SDO {format_sdo(parse_canopen_sdo_client_message(msg))}"
         elif msg_id < 0x700:
-            return "PDO : " + msg_to_string(msg)
+            return "PDO : "
         elif msg_id == 0x700:
             return undefined_message_id()
         elif msg_id < 0x780:
@@ -70,8 +58,8 @@ def explain_msg(msg):
             if msg.data[0] in CANopenLSSCommands:
                 return f"LSS {CANopenLSSCommands[msg.data[0]]}"
             else:
-                return "LSS " + msg_to_string(msg)
+                return "LSS"
         else:
-            return "QQ" + msg_to_string(msg)  # Add "QQ" and the line to the output string
+            return "QQ"
     except KeyError:
         return ""

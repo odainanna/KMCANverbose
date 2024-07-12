@@ -1,4 +1,4 @@
-from convert_trc_file import parse_trc_string, trc_line_to_out_line
+from redundant.convert_trc_file import parse_trc_line, trc_line_to_out_line
 from utils import assert_lines_are_similar
 
 
@@ -20,7 +20,7 @@ def test_nmt_0x7A():
 
 def test_pcan_to_can_message_len_0():
     line_from_trc_file = "      1      1453.159 FD     0716 Rx 0"
-    line_nr, msg = parse_trc_string(line_from_trc_file)
+    line_nr, msg = parse_trc_line(line_from_trc_file)
     assert line_nr == 1
     assert msg.timestamp == 1453.159
     assert msg.is_fd is True
@@ -32,7 +32,7 @@ def test_pcan_to_can_message_len_0():
 
 def test_pcan_to_can_message_len_1():
     line_from_trc_file = "      1      1453.159 FD     0716 Rx 1  05 "
-    line_nr, msg = parse_trc_string(line_from_trc_file)
+    line_nr, msg = parse_trc_line(line_from_trc_file)
     assert msg.timestamp == 1453.159
     assert msg.is_fd is True
     assert msg.arbitration_id == 0x0716
@@ -43,7 +43,7 @@ def test_pcan_to_can_message_len_1():
 
 def test_pcan_to_can_message_len_2():
     line_from_trc_file = "      1      1453.159 FD     0716 Rx 2  05 01"
-    line_nr, msg = parse_trc_string(line_from_trc_file)
+    line_nr, msg = parse_trc_line(line_from_trc_file)
     assert line_nr == 1
     assert msg.timestamp == 1453.159
     assert msg.is_fd is True
@@ -73,7 +73,7 @@ def test_dcl_indication():
 
 def test_usdo():
     line_from_trc_file = "19     11240.276 FD     0595 Rx 12 51 31 02 00 01 10 05 01 81 CC CC CC"
-    line_from_out_file = "19   11240.3 USDO  N:21      UlRsp 0x1001.0.Error Register 129, <0x81>"
+    line_from_out_file = "19   11240.3 USDO  N:21      UlRsp 0x1001.0 Error Register 129, <0x81>"
     check_single_line(line_from_trc_file, line_from_out_file)
 
 
@@ -86,5 +86,5 @@ def test_emcy():
 def test_0595():
     # encoding?
     line_from_trc_file = "     43     11700.482 FD     0595 Rx 16 51 31 0E 00 09 10 09 05 31 2E 30 2E 30 CC CC CC "
-    line_from_out_file = "43   11700.5 USDO  N:21      UlRsp 0x1009.0.Manufacturer Hardware Version 1.0.0ÌÌÌ"
+    line_from_out_file = "43   11700.5 USDO  N:21      UlRsp 0x1009.0 Manufacturer Hardware Version 1.0.0ÌÌÌ"
     check_single_line(line_from_trc_file, line_from_out_file)

@@ -22,6 +22,6 @@ def parse_canopen_nmt_message(msg: can.Message):
     elif msg.data[0] == NMT_RESET_COMMUNICATION:
         ret += " NMT_RESET_COMMUNICATION"
     else:
-        ret += "?? NMT STATE"
+        ret += " ?? NMT STATE"
 
     return ret
