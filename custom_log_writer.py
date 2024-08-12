@@ -34,9 +34,11 @@ class CustomLogWriter(FileIOMessageWriter):
     def message_to_string(msg: Message):
         timestamp = f'{msg.timestamp:.1f}'
         data = f'<{' '.join(f"{x:02x}" for x in msg.data)}>'
+        cob_id = hex(msg.arbitration_id)
         return " ".join(
             [
                 timestamp,
+                cob_id,
                 data,
                 describe_message(msg),
             ]

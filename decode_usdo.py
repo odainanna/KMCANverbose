@@ -119,7 +119,7 @@ def parse_canopen_usdo_server_message(msg: can.Message):
         # USDO abort service
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
         sdo.data = ''.join([f'{i:02x}' for i in msg.data[6:]])
-        sdo.value = valueFormat(DataType.UNSIGNED8, 6, msg.data)
+        # sdo.value, sdo.hexValue = get_value(DataType.UNSIGNED8, 6, msg.data)
         sdo.description = CANopen_dict_lookup(sdo)
         sdo.value = USDO_ERROR_MESSAGES[msg.data[6]]
 
@@ -130,10 +130,10 @@ def parse_canopen_usdo_server_message(msg: can.Message):
         is_write = (sdo.scs & 0x60) == 0x20
         datatype = msg.data[6]
         valueStart = 6
-        sdo.dataLength = msg.dlc - 6
-        sdo.data = ''.join([f'{i:02x}' for i in msg.data[6:]])
+        sdo.dataLength = msg.data[7]
+        sdo.data = ''.join([f'{i:02x}' for i in msg.data[6:6+sdo.dataLength]])
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
-        sdo.value = valueFormat(datatype, 8, msg.data)
+        sdo.value, sdo.hexValue = get_value(datatype, 8, msg.data[:8+sdo.dataLength])
         sdo.description = CANopen_dict_lookup(sdo)
     else:
         sdo.nodeId = msg.arbitration_id & 0x7F
@@ -151,9 +151,11 @@ def parse_canopen_usdo_client_message(msg: can.Message):
         sdo.operation = getCmdCodeTextUsdo(sdo.scs)
         sdo.index = msg.data[4] + (msg.data[5] << 8)
         sdo.subindex = msg.data[3]
-        sdo.dataLength = msg.dlc - 6
+        sdo.dataLength = msg.data[7]
         sdo.nodeId = msg.arbitration_id & 0x7F
-        sdo.data = ''.join([f'{i:02x}' for i in msg.data[8:]])
+        data = msg.data[8:8+sdo.dataLength]
+
+        sdo.data = ''.join([f'{i:02x}' for i in data])
 
         if sdo.index == 0x1017:
             datatype = DataType.UNSIGNED16
@@ -161,10 +163,19 @@ def parse_canopen_usdo_client_message(msg: can.Message):
             datatype = DataType.UNSIGNED8
         elif (sdo.index & 0xff00) in [0x1600, 0x1a00] and (sdo.subindex > 0):
             datatype = DataType.PDO_MAPPING_PARAMETER
+        elif msg.data[6] != 0:
+            datatype = msg.data[6]
+        elif sdo.dataLength == 1:
+            datatype = DataType.UNSIGNED8
+        elif sdo.dataLength == 2:
+            datatype = DataType.UNSIGNED16
+        elif sdo.dataLength == 4:
+            datatype = DataType.UNSIGNED32
         else:
-            datatype = msg.data[7]
+            # unknown data type
+            datatype = DataType.UNSIGNED32
 
-        sdo.value = valueFormat(datatype, 8, msg.data)
+        sdo.value, sdo.hexValue = get_value(datatype, 8, msg.data[:8+sdo.dataLength])
         sdo.description = CANopen_dict_lookup(sdo)
 
     elif sdo.scs == 0x11:
@@ -184,43 +195,43 @@ def parse_canopen_usdo_client_message(msg: can.Message):
     return sdo
 
 
-def valueFormat(datatype, valueStart, data):
-    value = ""
-
+def get_value(datatype, valueStart, data):
     if datatype == DataType.INTEGER8:
         b = data[valueStart]
-        value = convertLongToAsciiHex(b)
+        return str(b), hex(b)
 
     elif datatype == DataType.INTEGER16:
         s = data[valueStart] + (data[valueStart + 1] << 8)
-        value = convertLongToAsciiHex(s)
+        return str(s), hex(s)
 
     elif datatype == DataType.INTEGER32:
         l = (data[valueStart] + (data[valueStart + 1] << 8) + (data[valueStart + 2] << 16) + (
                 data[valueStart + 3] << 24))
-        value = convertLongToAsciiHex(l)
+        return str(l), hex(l)
 
     elif datatype == DataType.UNSIGNED8:
         ub = data[valueStart]
-        value = convertLongToAsciiHex(ub)
+        return str(ub), hex(ub)
 
     elif datatype == DataType.UNSIGNED16:
         us = data[valueStart] + (data[valueStart + 1] << 8)
-        value = convertLongToAsciiHex(us)
+        return str(us), hex(us)
 
     elif datatype == DataType.UNSIGNED32:
         l = (data[valueStart] + (data[valueStart + 1] << 8) + (data[valueStart + 2] << 16) + (
                 data[valueStart + 3] << 24))
-        value = convertLongToAsciiHex(l)
+        return str(l), hex(l)
 
     elif datatype == DataType.VISIBLE_STRING:
-        str = ''.join([chr(i) for i in data[valueStart:]])
-        value = str
+        s = ''.join([chr(i) for i in data[valueStart:]])
+        return s, ''
 
     elif datatype == DataType.PDO_MAPPING_PARAMETER:
         index = data[valueStart + 2] + (data[valueStart + 3] << 8)
         subindex = data[valueStart + 1]
         length = data[valueStart]
         value = f"{index:x}.{subindex}  Length: {length}"
+        return value, ''
 
-    return value
+    else:
+        return 'unknown datatype'

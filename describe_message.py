@@ -17,6 +17,7 @@ def describe_message(msg):
         return s
 
     msg_id = msg.arbitration_id
+    # TODO: see Table 50 – Pre-defined connection set
     try:
         if msg_id == -1:
             return "ERROR"

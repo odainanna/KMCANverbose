@@ -7,6 +7,7 @@ ERROR_CODES = {
     0x1030: "Termination Board not supported",
     0x1040: "FPGA configuration error",
     0x1041: "FPGA channel configuration corrupted",
+    0x10ff: "DPU-G boot software",
     0x2000: "Current",
     0x2010: "Earth Fault (Leak current)",
     0x2011: "Module over-current",
